@@ -1,53 +1,84 @@
 import pool from "@/lib/db"
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
 
 // place order
 export const POST = async (req) => {
 
     const body = await req.json()
     const {
-        oid, uid, total_amount, address, mobile_no, status,
+        oid, uid, total_amount, address, mobile_no, status, data
     } = body
 
-    try {
-        const res = await pool.query("insert into order (oid, uid, total_amount, address, mobile_no, status) values ($1, $2, $3, $4, $5, $6)", [oid, uid, total_amount, address, mobile_no, status])
-        const res = await pool.query("insert into order (oid, uid, total_amount, address, mobile_no, status) values ($1, $2, $3, $4, $5, $6)", [oid, uid, total_amount, address, mobile_no, status])
-
-    } catch (error) {
-
-    }
-}
-
-// Get all handles of user
-export const GET = async () => {
-
-    // const { isAuthenticated } = await auth()
-    // if (!isAuthenticated) {
-    //     return Response.json({
-    //         message: "unauthorized"
-    //     })
-    // }
-    // const user = await currentUser()  user.id
-    // if (!user) { 
-    //     return Response.json({
-    //         message: "user not fetched"  
-    //     })
-    // }
 
     try {
+        const res = await pool.query(`insert into "order" (oid, uid, total_amount, address, mobile_no, status) values ($1, $2, $3, $4, $5, $6)`, [oid, uid, total_amount, address, mobile_no, status])
 
-        const res = await pool.query("SELECT h.hno, h.handle_name, h.pfp_url, h.description, h.type, json_agg(json_build_object('lno', l.lno, 'hno', l.hno, 'link', l.link, 'link_text', l.link_text)) as links from handle h left join link l on h.hno = l.hno WHERE uid = $1 GROUP BY h.hno, h.handle_name, h.pfp_url, h.description, h.type", [user.id])
-        console.log(res);
+        for (let i = 0; i < data.length; i++) {
+            await pool.query(`insert into "order_item" (qty, oid, item_id) values ($1, $2, $3)`, [data[i].qty, oid, data[i].item_id])
+        }
 
         return Response.json({
             success: true,
-            message: "All handles fetched successfully!",
-            res
+            message: "Order placed successfully!",
         })
     } catch (error) {
         return Response.json({
             success: false,
-            message: "Failed to fetch handles. Some error occured!",
+            message: "Failed to place order. Some error occured!",
+            details: error
+        })
+    }
+}
+
+// Get order and order_items details
+export const GET = async (req) => {
+
+    const searchParams = new URL(req.url).searchParams
+    const uid = searchParams.get("uid")
+    const oid = searchParams.get("oid")
+
+    console.log(uid, oid);
+
+
+    try {
+
+        // const order = await pool.query(`select * from "order" where oid = $1 and uid = $2`, [oid, uid])
+        // const order_item = await pool.query(`select * from "order_item" where oid = $1`, [oid])
+        // const item = await pool.query(`select * from "item" where item_id = $1`, [order_item.rows[0].item_id])
+
+        const res = await pool.query(`
+            SELECT 
+            o.oid, 
+            o.total_amount, 
+            json_agg(json_build_object(
+                'item_id', oi.item_id, 
+                'item_name', i.item_name,
+                'price', i.price,
+                'description', i.description,
+                'item_pic', i.item_pic,
+                'qty', oi.qty
+            )) as order_items 
+             from "order" o 
+             join "order_item" oi 
+             on oi.oid = o.oid 
+             join item i 
+             on i.item_id = oi.item_id
+             where o.oid = $1 and o.uid = $2 group by o.oid, o.total_amount;
+             `, [oid, uid]);
+
+
+
+        return Response.json({
+            success: true,
+            message: "Order details fetched successfully!",
+            res
+
+        })
+    } catch (error) {
+        return Response.json({
+            success: false,
+            message: "Failed to fetch order details. Some error occured!",
             details: error
         })
     }

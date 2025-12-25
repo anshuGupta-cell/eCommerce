@@ -45,6 +45,7 @@ model Order {
   address      String
   mobile_no    Int
   status       String
+  description  String //in message for delivery failed, order cancelled, etc.
   uid          Int
   user         User         @relation(fields: [uid], references: [uid])
   order_items  Order_Item[]
@@ -67,8 +68,8 @@ model Feedback {
   fid         Int    @id @default(autoincrement())
   description String
   item_id     Int
-  item        Item   @relation(fields: [item_id], references: [item_id])
   uid         Int
+  item        Item   @relation(fields: [item_id], references: [item_id])
   user        User   @relation(fields: [uid], references: [uid])
 
   @@map("feedback")
