@@ -9,21 +9,29 @@ export const POST = async (req) => {
     const {
         uid, total_amount, address, mobile, status, cartData
     } = body
-console.log(body);
+    console.log(body);
 
 
     // try {
-        const res = await pool.query(`insert into "order" (uid, total_amount, address, mobile_no, status) values ($1, $2, $3, $4, $5) returning oid`, [uid, total_amount, address, mobile, status])
-        console.log(res);
+    const res = await pool.query(`insert into "order" (uid, total_amount, address, mobile_no, status) values ($1, $2, $3, $4, $5) returning oid`, [uid, total_amount, address, mobile, status])
+    console.log(res);
 
-        for (let i = 0; i < cartData.length; i++) {
-            await pool.query(`insert into "order_item" (qty, oid, item_id) values ($1, $2, $3)`, [cartData[i].qty, res.rows[0].oid, cartData[i].item_id])
-        }
+    for (let i = 0; i < cartData.length; i++) {
+        await pool.query(`insert into "order_item" (qty, oid, item_id) values ($1, $2, $3)`, [cartData[i].qty, res.rows[0].oid, cartData[i].item_id])
 
-        return Response.json({
-            success: true,
-            message: "Order placed successfully!",
-        })
+        await pool.query(`
+            update "item" set
+            qty = qty - $1 
+            where item_id = $2
+            `, [cartData[i].qty, cartData[i].item_id]
+        )
+    }
+
+
+    return Response.json({
+        success: true,
+        message: "Order placed successfully!",
+    })
     // } catch (error) {
     //     return Response.json({
     //         success: false,
@@ -44,10 +52,6 @@ export const GET = async (req) => {
 
 
     try {
-
-        // const order = await pool.query(`select * from "order" where oid = $1 and uid = $2`, [oid, uid])
-        // const order_item = await pool.query(`select * from "order_item" where oid = $1`, [oid])
-        // const item = await pool.query(`select * from "item" where item_id = $1`, [order_item.rows[0].item_id])
 
         const res = await pool.query(`
             SELECT 

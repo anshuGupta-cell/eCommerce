@@ -3,9 +3,11 @@ import pool from "@/lib/db"
 export const GET = async (req) => {
     const searchParams = new URL(req.url).searchParams
     const uid = searchParams.get("uid")
+
     try {
 
-        const res = await pool.query(`select * from "order" where uid = $2`, [uid])
+        const res = await pool.query(`select * from "order" where uid = $1`, [uid])
+        console.log(res);
 
         return Response.json({
             success: true,
