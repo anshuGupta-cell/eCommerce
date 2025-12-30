@@ -36,7 +36,7 @@ const MyOrder = () => {
                             <ul >
                                 <p>Mobile no: {order.mobile_no}</p>
                                 <p>Address: {order.address}</p>
-                                <p>Total items: 5</p>
+                                {/* <p>Total items: 5</p> */}
                                 <p>Total amount: {order.total_amount} Rs</p>
                             </ul>
                         </ul>
