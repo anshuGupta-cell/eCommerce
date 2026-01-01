@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    display: flex;
+    width: 100%;
+    padding: .5rem;
+    gap: .5rem;
+    margin: auto;
+    background: hsla(0, 0%, 0%, 0.141);
+    border-radius: 1rem;
+    
+}
+
+.left {
+    width: 5rem;
+}
+
+img {
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.top{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-weight: bold;
+}

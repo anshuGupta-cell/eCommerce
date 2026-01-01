@@ -4,17 +4,18 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 //add a feedback of item
 export const POST = async (req) => {
     const body = await req.json()
-    const { description, item_id, uid } = body
+    const { description, item_id, uid, subject } = body
     
     try {
 
-        const res = await pool.query(`INSERT INTO "feedback" (description, item_id, uid) values($1, $2, $3)`, [description, item_id, uid])
+        const res = await pool.query(`INSERT INTO "feedback" (description, subject, item_id, uid) values($1, $2, $3, $4)`, [description, subject, item_id, uid])
 
         return Response.json({
             success: true,
             message: "Feedback added successfully!",
             res
         })
+
     } catch (error) {
         return Response.json({
             success: false,
@@ -29,9 +30,17 @@ export const GET = async (req) => {
 
     const { searchParams } = new URL(req.url)
     const item_id = searchParams.get("item_id")
-
+    
     try {
-        const res = await pool.query(`SELECT description, uid from "feedback" where item_id = $1`, [item_id])
+        const res = await pool.query(`
+            SELECT f.fid, f.subject, f.description, f.date, u.name, u.pfp   
+            from "feedback" f
+            join "users" u
+            on u.uid = f.uid
+            where f.item_id = $1
+        `, [item_id])
+        console.log(" res -> ", res);
+        
 
         return Response.json({
             success: true,

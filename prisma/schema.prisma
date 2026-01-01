@@ -5,99 +5,102 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+    provider = "prisma-client"
+    output   = "../lib/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
 }
 
 model User {
-  uid       Int        @id @default(autoincrement())
-  name      String
-  email     String     @unique
-  orders     Order[]
-  feedbacks Feedback[]
+    uid       Int        @id @default(autoincrement())
+    name      String
+    pfp       String     @default("/profile_pic.webp")
+    email     String     @unique
+    orders    Order[]
+    feedbacks Feedback[]
 
-  @@map("users")
+    @@map("users")
 }
 
 model Item {
-  item_id     Int          @id @default(autoincrement())
-  item_name   String
-  price       Float
-  description String
-  item_pic    String
-  stock       Int
-  eid         Int
-  order_items Order_Item[]
-  feedback    Feedback[]
-  emp         Emp          @relation(fields: [eid], references: [eid])
+    item_id     Int          @id @default(autoincrement())
+    item_name   String
+    price       Float
+    description String
+    item_pic    String
+    stock       Int
+    eid         Int
+    order_items Order_Item[]
+    feedback    Feedback[]
+    emp         Emp          @relation(fields: [eid], references: [eid])
 
-  @@map("item")
+    @@map("item")
 }
 
 model Order {
-  oid          Int          @id @default(autoincrement())
-  total_amount Float
-  date         DateTime     @default(now())
-  address      String
-  mobile_no    String
-  status       String
-  description  String @default("No message")//in message for delivery failed, order cancelled, etc.
-  uid          Int
-  user         User         @relation(fields: [uid], references: [uid])
-  order_items  Order_Item[]
+    oid          Int          @id @default(autoincrement())
+    total_amount Float
+    date         DateTime     @default(now())
+    address      String
+    mobile_no    String
+    status       String
+    description  String       @default("No message") //in message for delivery failed, order cancelled, etc.
+    uid          Int
+    user         User         @relation(fields: [uid], references: [uid])
+    order_items  Order_Item[]
 
-  @@map("order")
+    @@map("order")
 }
 
 model Order_Item {
-  qty     Int   @default(1)
-  oid     Int
-  item_id Int
-  order   Order @relation(fields: [oid], references: [oid])
-  item    Item  @relation(fields: [item_id], references: [item_id])
+    qty     Int   @default(1)
+    oid     Int
+    item_id Int
+    order   Order @relation(fields: [oid], references: [oid])
+    item    Item  @relation(fields: [item_id], references: [item_id])
 
-  @@id([oid, item_id])
-  @@map("order_item")
+    @@id([oid, item_id])
+    @@map("order_item")
 }
 
 model Feedback {
-  fid         Int    @id @default(autoincrement())
-  description String
-  item_id     Int
-  uid         Int
-  item        Item   @relation(fields: [item_id], references: [item_id])
-  user        User   @relation(fields: [uid], references: [uid])
+    fid         Int      @id @default(autoincrement())
+    subject     String
+    description String
+    date        DateTime @default(now())
+    item_id     Int
+    uid         Int
+    item        Item     @relation(fields: [item_id], references: [item_id])
+    user        User     @relation(fields: [uid], references: [uid])
 
-  @@map("feedback")
+    @@map("feedback")
 }
 
 model Admin {
-  aid   Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+    aid   Int    @id @default(autoincrement())
+    name  String
+    email String @unique
 
-  @@map("admin")
+    @@map("admin")
 }
 
 enum Role {
-  vendor
-  delivery_man
+    vendor
+    delivery_man
 }
 
 model Emp {
-  eid       Int    @id @default(autoincrement())
-  name      String
-  email     String
-  address   String
-  mobile_no BigInt
-  role      String
-  items     Item[]
+    eid       Int    @id @default(autoincrement())
+    name      String
+    email     String
+    address   String
+    mobile_no BigInt
+    role      String
+    items     Item[]
 
-  // @@check(name: "role_check", expression: "role IN ('vendor', 'delivery_man')")
+    // @@check(name: "role_check", expression: "role IN ('vendor', 'delivery_man')")
 
-  @@map("emp")
+    @@map("emp")
 }

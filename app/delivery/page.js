@@ -96,7 +96,7 @@ const Delivery = () => {
                                 btnText={"Delivery failed"}
                                 isActive={true}
                             >
-                                <form className="grid bg-slate-800 p-3 gap-5 z-10" onSubmit={(e) =>orderFailed(order.oid, e)}>
+                                <form className="grid max-w-3xl m-auto  bg-slate-800 p-3 gap-5 z-50" onSubmit={(e) =>orderFailed(order.oid, e)}>
                                     <ul className="grid gap-2">
                                         <label name="desc" className="font-semibold">Enter the reason, why delivery is failed.</label>
                                         <textarea name="desc" 
