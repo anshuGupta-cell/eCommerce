@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-    uid       Int        @id @default(autoincrement())
+    uid       String     @id
     name      String
     pfp       String     @default("/profile_pic.webp")
     email     String     @unique
@@ -47,7 +47,7 @@ model Order {
     mobile_no    String
     status       String
     description  String       @default("No message") //in message for delivery failed, order cancelled, etc.
-    uid          Int
+    uid          String
     user         User         @relation(fields: [uid], references: [uid])
     order_items  Order_Item[]
 
@@ -71,7 +71,7 @@ model Feedback {
     description String
     date        DateTime @default(now())
     item_id     Int
-    uid         Int
+    uid         String
     item        Item     @relation(fields: [item_id], references: [item_id])
     user        User     @relation(fields: [uid], references: [uid])
 
