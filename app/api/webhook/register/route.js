@@ -1,11 +1,18 @@
-import { headers } from "next/headers"
-import { Webhook } from "svix"
 
-export async function GET(req) {
+export const GET = async () => {
 
-    return new Response.json({
-        res: "kldjfslk"
-    })
+        return Response.json({
+            success: true,
+            message: "Item fetched successfully!",
+            
+        })
+
+}
+
+// import { headers } from "next/headers"
+// import { Webhook } from "svix"
+
+// export async function POST(req) {
 //   try {
 //     const secret = process.env.WEBHOOK_SECRET
 //     if (!secret) return new Response("OK", { status: 200 })
@@ -34,78 +41,78 @@ export async function GET(req) {
 //     console.error(e)
 //     return new Response("OK", { status: 200 })
 //   }
-}
+// }
 
 
-// import { headers } from "next/headers";
-// import { Webhook } from "svix";
-// import { WebhookEvent } from "@clerk/nextjs/server";
-// import pool from "@/lib/db";
+// // import { headers } from "next/headers";
+// // import { Webhook } from "svix";
+// // import { WebhookEvent } from "@clerk/nextjs/server";
+// // import pool from "@/lib/db";
 
-// export const POST = async (req) => {
+// // export const POST = async (req) => {
 
-//     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
+// //     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
 
-//     if (!WEBHOOK_SECRET) {
-//         return new Response("please add webhook secret in env")
-//     }
+// //     if (!WEBHOOK_SECRET) {
+// //         return new Response("please add webhook secret in env")
+// //     }
 
-//     const headerPayload = headers()
-//     const svix_id = headerPayload.get("svix-id")
-//     const svix_timestamp = headerPayload.get("svix-timestamp")
-//     const svix_signature = headerPayload.get("svix-signature")
+// //     const headerPayload = headers()
+// //     const svix_id = headerPayload.get("svix-id")
+// //     const svix_timestamp = headerPayload.get("svix-timestamp")
+// //     const svix_signature = headerPayload.get("svix-signature")
 
-//     if (!svix_id || !svix_timestamp || !svix_signature) {
-//         return new Response("Some error occured - no svix headers")
-//     }
+// //     if (!svix_id || !svix_timestamp || !svix_signature) {
+// //         return new Response("Some error occured - no svix headers")
+// //     }
 
-//     const payload = await req.json()
-//     const body = JSON.stringify(payload)
+// //     const payload = await req.json()
+// //     const body = JSON.stringify(payload)
 
-//     const wh = new Webhook(WEBHOOK_SECRET)
-//     let evt
-//     try {
-//         evt = wh.verify(body, {
-//             "svix-id": svix_id,
-//             "svix-timestamp": svix_timestamp,
-//             "svix-signature": svix_signature
-//         })
-//     } catch (error) {
-//         console.error("Error verifying webhook");
-//         return new Response("Error occured", { status: 400 })
+// //     const wh = new Webhook(WEBHOOK_SECRET)
+// //     let evt
+// //     try {
+// //         evt = wh.verify(body, {
+// //             "svix-id": svix_id,
+// //             "svix-timestamp": svix_timestamp,
+// //             "svix-signature": svix_signature
+// //         })
+// //     } catch (error) {
+// //         console.error("Error verifying webhook");
+// //         return new Response("Error occured", { status: 400 })
 
-//     }
-//     const { id } = evt.data
-//     const eventType = evt.type
-//     console.log(id);
+// //     }
+// //     const { id } = evt.data
+// //     const eventType = evt.type
+// //     console.log(id);
 
-//     if (eventType === "user.created") {
-//         try {
-//             const {email_addresses, primary_email_address_id} = evt.data
+// //     if (eventType === "user.created") {
+// //         try {
+// //             const {email_addresses, primary_email_address_id} = evt.data
 
-//             const primaryEmail = email_addresses.find(
-//                 (email)=> email.id === primary_email_address_id
-//             )
+// //             const primaryEmail = email_addresses.find(
+// //                 (email)=> email.id === primary_email_address_id
+// //             )
 
-//             if (!primaryEmail) {
-//                 return new Response("No primary email found", {status: 400})
-//             }
+// //             if (!primaryEmail) {
+// //                 return new Response("No primary email found", {status: 400})
+// //             }
 
-//         const res = await pool.query(`
-//             insert into "users" 
-//             (uid, email) 
-//             values($1, $2)
-//             `[evt.data.id, primaryEmail.email_address])
-//             console.log("user created");
+// //         const res = await pool.query(`
+// //             insert into "users" 
+// //             (uid, email) 
+// //             values($1, $2)
+// //             `[evt.data.id, primaryEmail.email_address])
+// //             console.log("user created");
             
 
-//         } catch (error) {
-//             return new Response("Error creating user in db")
-//         }
+// //         } catch (error) {
+// //             return new Response("Error creating user in db")
+// //         }
 
-//     }
+// //     }
 
-//     return new Response("Webhook received successfully", {status: 200})
+// //     return new Response("Webhook received successfully", {status: 200})
 
-// }
+// // }
