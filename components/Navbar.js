@@ -58,7 +58,7 @@ const Navbar = () => {
 
                         <div className="flex items-center bg-gradient-to-bl rounded-xl">
                             <Link className="p-2 text-xl font-bold " href="/">
-                                Link Pool
+                               Ammazon
                             </Link>
                         </div>
 

@@ -1,10 +1,15 @@
 import { headers } from "next/headers"
 import { Webhook } from "svix"
+import pool from "@/lib/db"
 
 export async function POST(req) {
+  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
+
   try {
-    const secret = process.env.WEBHOOK_SECRET
-    if (!secret) return new Response("OK", { status: 200 })
+    if (!WEBHOOK_SECRET) {
+      console.error("Missing webhook secret")
+      return new Response("OK", { status: 200 })
+    }
 
     const h = headers()
     const svix_id = h.get("svix-id")
@@ -16,96 +21,47 @@ export async function POST(req) {
     }
 
     const body = await req.text()
-    const wh = new Webhook(secret)
+    const wh = new Webhook(WEBHOOK_SECRET)
 
-    wh.verify(body, {
+    const evt = wh.verify(body, {
       "svix-id": svix_id,
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     })
 
-    //  do async work later
-    return new Response("OK", { status: 200 })
-  } catch (e) {
-    console.error(e)
+    // 🔹 respond immediately
+    const response = new Response("OK", { status: 200 })
+
+    // 🔹 async work AFTER response
+    if (evt.type === "user.created") {
+      queueMicrotask(async () => {
+        try {
+          const { email_addresses, primary_email_address_id } = evt.data
+
+          const primaryEmail = email_addresses.find(
+            (email) => email.id === primary_email_address_id
+          )
+
+          if (!primaryEmail) return
+
+          await pool.query(
+            `INSERT INTO "users" (uid, email) VALUES ($1, $2)`,
+            [evt.data.id, primaryEmail.email_address]
+          )
+
+          console.log("User created:", evt.data.id)
+        } catch (err) {
+          console.error("DB error:", err)
+        }
+      })
+    }
+
+    return response
+  } catch (err) {
+    console.error("Webhook failure:", err)
     return new Response("OK", { status: 200 })
   }
 }
-
-
-// // import { headers } from "next/headers";
-// // import { Webhook } from "svix";
-// // import { WebhookEvent } from "@clerk/nextjs/server";
-// // import pool from "@/lib/db";
-
-// // export const POST = async (req) => {
-
-// //     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
-
-
-// //     if (!WEBHOOK_SECRET) {
-// //         return new Response("please add webhook secret in env")
-// //     }
-
-// //     const headerPayload = headers()
-// //     const svix_id = headerPayload.get("svix-id")
-// //     const svix_timestamp = headerPayload.get("svix-timestamp")
-// //     const svix_signature = headerPayload.get("svix-signature")
-
-// //     if (!svix_id || !svix_timestamp || !svix_signature) {
-// //         return new Response("Some error occured - no svix headers")
-// //     }
-
-// //     const payload = await req.json()
-// //     const body = JSON.stringify(payload)
-
-// //     const wh = new Webhook(WEBHOOK_SECRET)
-// //     let evt
-// //     try {
-// //         evt = wh.verify(body, {
-// //             "svix-id": svix_id,
-// //             "svix-timestamp": svix_timestamp,
-// //             "svix-signature": svix_signature
-// //         })
-// //     } catch (error) {
-// //         console.error("Error verifying webhook");
-// //         return new Response("Error occured", { status: 400 })
-
-// //     }
-// //     const { id } = evt.data
-// //     const eventType = evt.type
-// //     console.log(id);
-
-// //     if (eventType === "user.created") {
-// //         try {
-// //             const {email_addresses, primary_email_address_id} = evt.data
-
-// //             const primaryEmail = email_addresses.find(
-// //                 (email)=> email.id === primary_email_address_id
-// //             )
-
-// //             if (!primaryEmail) {
-// //                 return new Response("No primary email found", {status: 400})
-// //             }
-
-// //         const res = await pool.query(`
-// //             insert into "users" 
-// //             (uid, email) 
-// //             values($1, $2)
-// //             `[evt.data.id, primaryEmail.email_address])
-// //             console.log("user created");
-            
-
-// //         } catch (error) {
-// //             return new Response("Error creating user in db")
-// //         }
-
-// //     }
-
-// //     return new Response("Webhook received successfully", {status: 200})
-
-// // }
-
 
 export const GET = async () => {
 
