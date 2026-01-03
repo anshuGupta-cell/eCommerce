@@ -52,9 +52,9 @@ export const POST = async (req) => {
 
         const res = await pool.query(`
             insert into "users" 
-            (uid, name, pfp, email) 
-            values($1, $2, $3, $4)
-            `[evt.data.id, primaryEmail.email_address, ])
+            (uid, email) 
+            values($1, $2)
+            `[evt.data.id, primaryEmail.email_address])
             console.log("user created");
             
 
