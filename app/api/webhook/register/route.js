@@ -55,8 +55,8 @@ export const POST = async (req) => {
         return new Response("Some error occured - no svix headers", { status: 400 })
     }
 
-    const payload = await req.json()
-    const body = JSON.stringify(payload)
+    const body = await req.text()
+    const payload = JSON.parse(body)
 
     // const body = await req.text()
 
@@ -94,15 +94,17 @@ export const POST = async (req) => {
             //     `INSERT INTO "users" (uid, name, pfp, email) VALUES ($1, $2, $3, $4)`,
             //     [evt.data.id, primaryEmail.email_address, 'Anshu', 'snv,sv']
             // )
+
             await pool.query(
-                `INSERT INTO "users" (uid, name, pfp, email) VALUES ('shfjs', 'anshu', 'picture', 'email@gmail.com');`
+                `INSERT INTO "users" (uid, name, pfp, email)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (uid) DO NOTHING`,
+                ['shfjs', 'anshu', 'picture', 'email@gmail.com']
             )
-
-
         } catch (error) {
-            return new Response("Error creating user in db", {status:400})
+            console.error(error)
+            // return new Response("DB error", { status: 400 })
         }
-
     }
 
     return new Response("Webhook received successfully", { status: 200 })
