@@ -90,9 +90,12 @@ export const POST = async (req) => {
                 return new Response("No primary email found", { status: 400 })
             }
 
+            // await pool.query(
+            //     `INSERT INTO "users" (uid, name, pfp, email) VALUES ($1, $2, $3, $4)`,
+            //     [evt.data.id, primaryEmail.email_address, 'Anshu', 'snv,sv']
+            // )
             await pool.query(
-                `INSERT INTO "users" (uid, name, pfp, email) VALUES ($1, $2, $3, $4)`,
-                [evt.data.id, primaryEmail.email_address, 'Anshu', 'snv,sv']
+                `INSERT INTO "users" (uid, name, pfp, email) VALUES ('shfjs', 'anshu', 'picture', 'email@gmail.com');`
             )
 
 
