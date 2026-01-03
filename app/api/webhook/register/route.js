@@ -4,7 +4,11 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import pool from "@/lib/db";
 
 export const POST = async (req) => {
+
+    return new Response("hmm")
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
+
+
     if (!WEBHOOK_SECRET) {
         throw new Error("please add webhook secret in env")
     }
