@@ -33,7 +33,9 @@ const AddItem = () => {
                 body: form
             })
             const resData = await res.json()
-            toast("Item added successfully")
+            if (res.ok) {
+                toast("Item added successfully")
+            }
 
             setItemName("")
             setPrice("")
