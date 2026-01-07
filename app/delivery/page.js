@@ -21,6 +21,7 @@ const Delivery = () => {
             toast("Failed to get items")
         }
     }
+    
     useEffect(() => {
         fetchData()
     }, [])

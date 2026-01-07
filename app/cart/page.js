@@ -46,7 +46,6 @@ const Cart = ({ }) => {
             address,
             total_amount: cartData.reduce((sum, item) => sum + item.price, 0),
             status: "Order Placed",
-            uid: 1,
             cartData
         }
         try {
@@ -69,10 +68,6 @@ const Cart = ({ }) => {
         } catch (error) {
             toast("Failed to place order. Some error occured")
         }
-        console.log(resData);
-        
-
-        
     }
 
     return (

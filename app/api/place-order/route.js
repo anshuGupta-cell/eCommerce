@@ -1,4 +1,5 @@
 import pool from "@/lib/db"
+import getUserId from "@/lib/getUser";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 
@@ -6,15 +7,27 @@ import { NextRequest } from "next/server";
 export const POST = async (req) => {
 
     const body = await req.json()
+    const uid = await getUserId()
+
+
+    console.log("userId -> ", typeof uid, uid);
+    if (uid <= 0) {
+        return Response.json({
+            success: false,
+            message: "User Not Found!!!",
+            details: error
+        })
+    }
+
     const {
-        uid, total_amount, address, mobile, status, cartData
+        total_amount, address, mobile, status, cartData
     } = body
-    console.log(body);
+    console.log("body", total_amount, address, mobile, status, cartData);
 
 
     // try {
     const res = await pool.query(`insert into "order" (uid, total_amount, address, mobile_no, status) values ($1, $2, $3, $4, $5) returning oid`, [uid, total_amount, address, mobile, status])
-    console.log(res);
+    // console.log(res);
 
     for (let i = 0; i < cartData.length; i++) {
         await pool.query(`insert into "order_item" (qty, oid, item_id) values ($1, $2, $3)`, [cartData[i].qty, res.rows[0].oid, cartData[i].item_id])
