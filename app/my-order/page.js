@@ -9,7 +9,7 @@ const MyOrder = () => {
     const [orders, setOrders] = useState([])
     const fetchData = async () => {
         try {
-            const res = await fetch("/api/order?uid=1", { cache: "no-store" })
+            const res = await fetch("/api/order", { cache: "no-store" })
             const data = await res.json()
             setOrders(data.res.rows)
             console.log(data.res);

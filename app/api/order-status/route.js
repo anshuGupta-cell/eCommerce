@@ -1,4 +1,5 @@
 import pool from "@/lib/db"
+import getUserId from "@/lib/getUser"
 
 // set order status to confirmed || delivered 
 export const PATCH = async (req) => {
@@ -26,7 +27,8 @@ export const PATCH = async (req) => {
 // get order status
 export const GET = async (req) => {
     const searchParams = new URL(req.url).searchParams
-    const uid = searchParams.get("uid")
+    // const uid = searchParams.get("uid")
+    const uid = await getUserId()
     const oid = searchParams.get("oid")
     try {
 

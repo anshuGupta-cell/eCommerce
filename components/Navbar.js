@@ -67,7 +67,7 @@ const Navbar = () => {
                             <Link onClick={closeMenu} className={`p-2 ${pathName == "/add-item" ? active : ""}`} href="/add-item">add-item</Link>
                             <Link onClick={closeMenu} className={`p-2 ${pathName == "/cart" ? active : ""}`} href="/cart">Cart</Link>
                             <Link onClick={closeMenu} className={`p-2 ${pathName == "/my-order" ? active : ""}`} href="/my-order">My Order</Link>
-                            <Link onClick={closeMenu} className={`p-2 ${pathName == "/delivery" ? active : ""}`} href="/delivery">delivery me</Link>
+                            <Link onClick={closeMenu} className={`p-2 ${pathName == "/delivery" ? active : ""}`} href="/delivery">delivery</Link>
                             <Link onClick={closeMenu} className={`p-2 ${pathName == "/order-confirmation" ? active : ""}`} href="/order-confirmation">order-confirmation</Link>
                         </div>
 
@@ -113,7 +113,7 @@ const Navbar = () => {
                     <Link onClick={closeMenu} className={`p-2 ${pathName == "/add-item" ? active : ""}`} href="/add-item">add-item</Link>
                     <Link onClick={closeMenu} className={`p-2 ${pathName == "/cart" ? active : ""}`} href="/cart">Cart</Link>
                     <Link onClick={closeMenu} className={`p-2 ${pathName == "/my-order" ? active : ""}`} href="/my-order">My Order</Link>
-                    <Link onClick={closeMenu} className={`p-2 ${pathName == "/delivery" ? active : ""}`} href="/delivery">delivery me</Link>
+                    <Link onClick={closeMenu} className={`p-2 ${pathName == "/delivery" ? active : ""}`} href="/delivery">delivery</Link>
                     <Link onClick={closeMenu} className={`p-2 ${pathName == "/order-confirmation" ? active : ""}`} href="/order-confirmation">order-confirmation</Link>
 
                 </div>

@@ -1,8 +1,10 @@
 import pool from "@/lib/db"
+import getUserId from "@/lib/getUser";
 
 export const GET = async (req) => {
-    const searchParams = new URL(req.url).searchParams
-    const uid = searchParams.get("uid")
+    // const searchParams = new URL(req.url).searchParams
+    // const uid = searchParams.get("uid")
+const uid = await getUserId()
 
     try {
 

@@ -12,7 +12,7 @@ const page = () => {
 
     const fetchData = async () => {
         try {
-            const res = await fetch(`/api/order-detail?uid=1&oid=${oid}`, { cache: "no-store" })
+            const res = await fetch(`/api/order-detail?oid=${oid}`, { cache: "no-store" })
             const data = await res.json()
             console.log(data.res.rows[0]);
 
