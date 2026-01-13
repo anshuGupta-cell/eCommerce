@@ -14,7 +14,7 @@ const OrderStatusCard = (props) => {
             <div class=" flex p-2">
                 <ul class=" grid justify-center gap-1">
                     <div class="circle ">
-                        <div class={`sub-circle  ${status === "placed" || status === "confirmed" || status === "completed" ? "active" : ""}`}>
+                        <div class={`sub-circle  ${status === "Order Placed" || status === "confirmed" || status === "completed" ? "active" : ""}`}>
                             <p>Order Placed</p>
                         </div>
                     </div>
