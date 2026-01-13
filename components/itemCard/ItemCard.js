@@ -14,7 +14,7 @@ const ItemCard = (props) => {
     <div className="grid p-2 bg-blue-50 dark:bg-blue-50/10 gap-3 rounded-lg ">
       <div >
         <ul className="grid place-items-center">
-          <img className="h-full w-full object-cover rounded-lg" src="/profile_pic.webp" alt="" />
+          <img className="h-full w-full object-cover rounded-lg" src={item.item_pic} alt="" />
         </ul>
         <ul className="p-1">
           <h3 className="font-bold">{item.item_name}</h3>
