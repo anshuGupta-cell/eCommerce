@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import {
     SignInButton,
-    SignUpButton,
     SignedIn,
     SignedOut,
     UserButton

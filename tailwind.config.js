@@ -27,7 +27,7 @@ module.exports = {
           "grid-template-columns": "repeat(auto-fit, minmax(200, 1fr))"
         },
         ".res-grid-280": {
-          "grid-template-columns": "repeat(auto-fit, minmax(280, 1fr))"
+          "grid-template-columns": "repeat(auto-fit, minmax(280px, 1fr))"
         },
         
       })
