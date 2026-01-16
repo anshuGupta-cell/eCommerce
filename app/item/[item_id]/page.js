@@ -117,9 +117,9 @@ const Item = ({params}) => {
     return (
         <section className="py-32 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-slate-900 dark:to-slate-800 text-black dark:text-white/80 px-2">
 
-            <div className="max-w-3xl  mx-auto space-y-4">
+            <div className="max-w-3xl mx-auto space-y-4">
                 <img
-                    className="m-auto max-h-[24rem] object-cover rounded-lg "
+                    className="m-auto w-full h-full object-cover rounded-lg "
                     src={`/profile_pic.webp`}
                     alt={item.item_name}
                 />

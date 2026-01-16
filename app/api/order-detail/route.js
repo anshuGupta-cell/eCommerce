@@ -30,6 +30,9 @@ export const GET = async (req) => {
             o.address, o.date, o.description, o.mobile_no, o.status, o.total_amount
             `, [uid, oid])
 
+            console.log("res --> ", res);
+            
+
         return Response.json({
             success: true,
             message: "Status fetched successfully!",

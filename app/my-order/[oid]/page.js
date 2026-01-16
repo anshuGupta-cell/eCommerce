@@ -11,6 +11,8 @@ const page = () => {
     const [items, setItems] = useState([])
 
     const fetchData = async () => {
+        console.log(oid);
+        
         try {
             const res = await fetch(`/api/order-detail?oid=${oid}`, { cache: "no-store" })
             const data = await res.json()
@@ -36,24 +38,24 @@ const page = () => {
                         <h3 className='font-bold'>Order Items</h3>
                         <div className="grid gap-2 rounded-lg p-2 ">
                             <ul className="flex gap-12 text-nowrap">
-                                <p className="font-bold">Order id: {orderData.oid}</p>
-                                <p className="text-sm">{orderData.date}</p>
+                                <p className="font-bold">Order id: {orderData? orderData.oid : "24"}</p>
+                                <p className="text-sm">{orderData ? orderData.date : "23-1-2026"}</p>
                             </ul>
                             <ul >
-                                <p>Mobile no: {orderData.mobile_no}</p>
-                                <p>Address: {orderData.address}</p>
-                                <p>Total items: {items.length}</p>
-                                <p>Total amount: {orderData.total_amount} Rs</p>
+                                <p>Mobile no: {orderData ? orderData.mobile_no : "9579695156"}</p>
+                                <p>Address: {orderData ? orderData.address : "ST Colony"}</p>
+                                <p>Total items: {items && items.length ? items.length : "3"}</p>
+                                <p>Total amount: {orderData ? orderData.total_amount : "7099"} Rs</p>
                             </ul>
                         </div>
                     </ul>
                     <ul>
-                        <OrderStatusCard status={orderData.status} />
+                        <OrderStatusCard status={orderData ? orderData.status : "confirmed"} />
                     </ul>
                 </div>
                 <ul>
                     <h3 className='font-bold'>Order Items</h3>
-                    <div className=" grid res-grid-280 gap-2">
+                    {items && items.length > 0 ? <div className=" grid res-grid-280 gap-2">
 
                         {items.map((item) => (
                             <ItemCard
@@ -61,7 +63,7 @@ const page = () => {
                                 qty={item.qty}
                             />
                         ))}
-                    </div>
+                    </div>: <div>No items to show</div>}
                 </ul>
             </div>
         </section >
